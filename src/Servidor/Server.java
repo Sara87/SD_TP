@@ -9,12 +9,12 @@ public class Server {
 
     public static void main(String [] args) throws IOException{
         ServerSocket server = new ServerSocket(port);
-        OverBlind overBlind;
+        OverBlind overBlind =  new OverBlind();
 
         while(true){
             Socket c = server.accept();
             Skeleton sk = new Skeleton(c, overBlind);
-            cliente.start();
+            sk.start();
         }
     }
 

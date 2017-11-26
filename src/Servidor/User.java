@@ -1,5 +1,6 @@
 package Servidor;
 
+import java.io.IOException;
 import java.net.Socket;
 
 public class User implements Comparable<User>{
@@ -10,32 +11,52 @@ public class User implements Comparable<User>{
     public User(){}
 
     public String getUsername() {
+
         return username;
     }
 
     public void setUsername(String username) {
+
         this.username = username;
     }
 
     public void setPassword(String password) {
+
         this.password = password;
     }
 
     public Socket getSocket() {
+
         return socket;
     }
 
     public void setSocket(Socket socket) {
+
         this.socket = socket;
     }
 
     @Override
     public int compareTo(User user) {
+
         return this.username.compareTo(user.getUsername());
     }
 
     public boolean comparePass(String pass){
+
         return this.password.equals(pass);
+    }
+
+    public void initCloseSocket(Socket s) throws IOException{
+
+        if(!socket.isClosed() && socket != null)
+            socket.close();
+
+        this.socket = s;
+    }
+
+    public String toString(){
+        return this.username;
+
     }
 
     @Override
@@ -50,6 +71,5 @@ public class User implements Comparable<User>{
         return this.username.equals(user.getUsername())
                 && user.comparePass(this.password);
     }
-
 
 }
