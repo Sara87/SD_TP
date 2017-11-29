@@ -2,7 +2,7 @@ package Servidor;
 
 import java.util.List;
 
-public class Game implements Thread{
+public class Game extends Thread {
     private int gameId;
     private List<User> team1;
     private List<User> team2;
