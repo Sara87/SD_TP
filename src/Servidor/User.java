@@ -6,9 +6,13 @@ import java.net.Socket;
 public class User implements Comparable<User>{
     private String username;
     private String password;
+    private int rank;
+    private int wins;
+    private int losses;
     private Socket socket;
 
     public User(){}
+
 
     public String getUsername() {
 
@@ -23,6 +27,32 @@ public class User implements Comparable<User>{
     public void setPassword(String password) {
 
         this.password = password;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
+
+    public int getWins() {
+        return wins;
+    }
+
+    public void setWins() {
+        this.wins++;
+        updateRank();
+    }
+
+    public int getLosses() {
+        return losses;
+    }
+
+    public void setLosses() {
+        this.losses++;
+        updateRank();
     }
 
     public Socket getSocket() {
@@ -54,9 +84,30 @@ public class User implements Comparable<User>{
         this.socket = s;
     }
 
-    public String toString(){
-        return this.username;
 
+    private void updateRank(){
+        int j = this.wins - this.losses;
+
+        if(j >= 50) this.rank = 9;
+        if(j >= 40) this.rank = 8;
+        if(j >= 30) this.rank = 7;
+        if(j >= 20) this.rank = 6;
+        if(j >= 10) this.rank = 5;
+        if(j >= 0) this.rank = 4;
+        if(j <= -10) this.rank = 3;
+        if(j <= -20) this.rank = 2;
+        if(j <= -30) this.rank = 1;
+        if(j <= -50) this.rank = 0;
+
+    }
+
+
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append(username).append("\n");
+        sb.append("Rank: ").append(rank);
+
+        return sb.toString();
     }
 
     @Override
@@ -69,7 +120,8 @@ public class User implements Comparable<User>{
         User user = (User) obj;
 
         return this.username.equals(user.getUsername())
-                && user.comparePass(this.password);
+                && user.comparePass(this.password)
+                && user.getRank() == this.rank;
     }
 
 }

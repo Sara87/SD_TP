@@ -20,4 +20,8 @@ public class Skeleton extends Thread{
         this.output = new PrintWriter(userSocket.getOutputStream(), true);
     }
 
+    @Override
+    public void run() {
+
+    }
 }
