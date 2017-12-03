@@ -22,6 +22,28 @@ public class Skeleton extends Thread{
 
     @Override
     public void run() {
+        String op = null;
 
+        while((op = readLine())!= null){
+            String resp = translator(op);
+
+            if(!resp.isEmpty())
+                output.println(resp);
+        }
+    }
+
+    //interpreta opção
+    public String interpretation(String op){
+        try{
+            translator(op);
+        }
+        catch(OptionDeclinedException e){
+            return e.getMessage();
+        }
+    }
+
+    //traduz comandos do cliente
+    public String translator(String op){
+        return null;
     }
 }
