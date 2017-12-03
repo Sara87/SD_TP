@@ -15,12 +15,11 @@ public class OverBlind {
 
     /**
      * Login do utilizador na plataforma.
-     *
      * @param username Username do novo registo.
      * @param password Password do novo registo.
      */
-    public synchronized User login (String username, String password) throws UserInvalidException {
-        User u = new User();
+    public User login (String username, String password) throws UserInvalidException {
+        User u;
         try {
             u = validaUtilizador(username, password);
         } catch (Exception e) {
@@ -31,7 +30,6 @@ public class OverBlind {
 
     /**
      * Verifica se os dados do utilizador estão corretos
-     *
      * @param username Username do utilizador
      * @param password password do utilizador
      */
@@ -49,5 +47,7 @@ public class OverBlind {
         }
         return u;
     }
+
+
 
 }
