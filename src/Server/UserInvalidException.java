@@ -1,4 +1,4 @@
-package Servidor;
+package Server;
 
 public class UserInvalidException extends Exception {
 

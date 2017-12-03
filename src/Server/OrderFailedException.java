@@ -1,4 +1,4 @@
-package Cliente;
+package Server;
 
 public class OrderFailedException extends Exception {
 

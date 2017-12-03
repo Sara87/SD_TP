@@ -1,4 +1,4 @@
-package Servidor;
+package Server;
 
 import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;

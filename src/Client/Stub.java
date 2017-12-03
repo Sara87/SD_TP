@@ -1,9 +1,7 @@
-package Cliente;
+package Client;
 
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.NoSuchElementException;
 
 public class Stub extends Thread {
@@ -53,10 +51,10 @@ public class Stub extends Thread {
 
     private void setUpMenus() {
         initialMenu = new String[2];
-        sessionMenu = new String[5];
+        sessionMenu = new String[3];
 
-        initialMenu[0] = "1) Sign up";
-        initialMenu[1] = "2) Sign in";
+        initialMenu[0] = "1) Iniciar Sessão";
+        initialMenu[1] = "2) Registar";
 
         sessionMenu[0] = "1) Começar nova partida";
         sessionMenu[1] = "2) Consultar heróis";
@@ -68,10 +66,11 @@ public class Stub extends Thread {
         String response ;
         switch (op) {
             case 1:
-                register();
-                break;
-            case 2:
                 login();
+                break;
+
+            case 2:
+                register();
                 break;
             /*
             case 3:

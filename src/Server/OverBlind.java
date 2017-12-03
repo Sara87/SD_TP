@@ -1,6 +1,7 @@
-package Servidor;
+package Server;
 
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -10,13 +11,11 @@ public class OverBlind {
     private ReentrantLock userLock;
     private ReentrantLock gameLock;
 
-    public OverBlind(){}
-
-    public OverBlind(Map<String, User> users, Map<String, String> heroes, ReentrantLock userLock, ReentrantLock gameLock) {
-        this.users = users;
-        this.heroes = heroes;
-        this.userLock = userLock;
-        this.gameLock = gameLock;
+    public OverBlind(){
+        this.users = new HashMap<>();
+        this.heroes = new HashMap<>();
+        this.userLock = new ReentrantLock();
+        this.gameLock = new ReentrantLock();
     }
 
     /**

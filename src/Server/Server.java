@@ -1,11 +1,11 @@
-package Servidor;
+package Server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
-    private static final int port = 1234;
+    private static final int port = 5000;
 
     public static void main(String [] args) throws IOException{
         ServerSocket server = new ServerSocket(port);

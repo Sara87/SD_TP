@@ -1,4 +1,4 @@
-package Servidor;
+package Server;
 
 public class OptionDeclinedException extends Exception{
     OptionDeclinedException(String str){
