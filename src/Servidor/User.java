@@ -87,18 +87,21 @@ public class User implements Comparable<User>{
 
     private void updateRank(){
         int j = this.wins - this.losses;
+        int i, k;
 
-        if(j >= 50) this.rank = 9;
-        if(j >= 40) this.rank = 8;
-        if(j >= 30) this.rank = 7;
-        if(j >= 20) this.rank = 6;
-        if(j >= 10) this.rank = 5;
-        if(j >= 0) this.rank = 4;
-        if(j <= -10) this.rank = 3;
-        if(j <= -20) this.rank = 2;
-        if(j <= -30) this.rank = 1;
-        if(j <= -50) this.rank = 0;
+        for (i = 0 , k = -50; i <= 9 ; i ++) {
+            if (k < 0 && j <= k ) {
+                this.rank = i;
+                break;
+            }
 
+            if (k >= 0 && j >= k ) {
+                this.rank = i;
+                break;
+            }
+
+            k += 10;
+        }
     }
 
 
