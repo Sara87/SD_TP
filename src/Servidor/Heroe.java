@@ -1,6 +1,7 @@
 package Servidor;
 
 public class Heroe {
+
     private String name;
     private boolean taken;
 
