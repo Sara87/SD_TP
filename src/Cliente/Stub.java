@@ -27,7 +27,7 @@ public class Stub extends Thread {
     public void run() {
         int option;
 
-        while((option = showMenu()) != -1) {
+        while ((option = showMenu()) != -1) {
             runCommand(option);
         }
 
@@ -43,7 +43,7 @@ public class Stub extends Thread {
             if (!client)
                 option = menu.showMenu(initialMenu);
             else {
-                option = menu.showMenu(sessionMenu) ;
+                option = menu.showMenu(sessionMenu);
             }
         } catch (NoSuchElementException e) {
             return -1;
@@ -67,27 +67,32 @@ public class Stub extends Thread {
 
     private String runCommand(int option) {
         String response = "";
-        switch(option) {
-            case 1: register();
+        switch (option) {
+            case 1:
+                register();
                 break;
-            case 2: login();
+            case 2:
+                login();
                 break;
-            case 3: startGame();
+            case 3:
+                startGame();
                 break;
-            case 4: listHeroes();
+            case 4:
+                listHeroes();
                 break;
-            case 5: rank();
+            case 5:
+                rank();
                 break;
         }
         response = reader.ler(option);
         if (option == 1) {
             this.client = true;
         }
-    } catch (PedidoFalhadoException e) {
-        resposta = e.getMessage();
 
         return response;
     }
+
+
 
     private void login() {
         String username = menu.readString("Username: ");
@@ -97,20 +102,14 @@ public class Stub extends Thread {
         out.println(query);
     }
 
+
     private String register() {
         String username = menu.readString("Username: ");
         String password = menu.readString("Password: ");
         String query = String.join(" ", "REGISTAR", username, password);
 
         out.println(query);
-        String response = client.getResponse();
 
-        if (client.getReplyStatus()) {
-            query = String.join(" ", "LOGIN", username, password);
-            out.println(query);
-            response = client.getResponse();
-            client.setLogged(true);
-        }
-
-        menu.printResponse(response);
+        return query;
     }
+}
