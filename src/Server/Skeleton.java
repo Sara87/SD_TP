@@ -22,26 +22,22 @@ public class Skeleton extends Thread{
 
     @Override
     public void run() {
-        String request = null;
-
+        String option;
         try {
-            while ((request = input.readLine()) != null) {
-                String response = interpreteRequest(request);
-                if (!response.isEmpty()) {
+            while ((option = input.readLine()) != null) {
+                String reply = interpreter(option);
+                if (!reply.isEmpty()) {
                     //TODO Tirar isto -> só para testar
-                    System.out.println("Resposta servidor: " + response);
-                    output.println(response);
-                    output.flush();
-
+                    System.out.println("Resposta servidor: " + reply);
+                    output.println(reply);
                 }
             }
         } catch (IOException e) {
-            terminarConexao();
+            endConnection();
         }
     }
 
-
-    private String interpreteRequest(String request){
+    private String interpreter(String request){
         try {
             return translator(request);
         } catch (OrderFailedException e) {
@@ -52,18 +48,26 @@ public class Skeleton extends Thread{
     }
 
     private String translator(String request) throws ArrayIndexOutOfBoundsException, OrderFailedException {
-        String[] keywords = request.split(" ", 2);
+        String[] parameters = request.split(" ", 2);
 
-        switch(keywords[0].toUpperCase()) {
+        switch(parameters[0].toUpperCase()) {
             case "REGISTAR":
-                //utilizadorLogado(false);
-                return registar(keywords[1]);
+                checkLogin(false);
+                return registar(parameters[1]);
             case "LOGIN":
-                //utilizadorLogado(false);
-                return login(keywords[1]);
+                checkLogin(false);
+                return login(parameters[1]);
             default:
-                throw new OrderFailedException(keywords[0] + " não é um comando válido");
+                throw new OrderFailedException(parameters[0] + " não é um comando válido");
         }
+    }
+
+    private void checkLogin(boolean state) throws OrderFailedException {
+        if (state == true && user == null)
+            throw new OrderFailedException("É necessário iniciar sessão para aceder aos ativos");
+
+        if (state == false && user != null)
+            throw new OrderFailedException("Já existe uma sessão iniciada");
     }
 
     private String registar(String argumentos) throws OrderFailedException {
@@ -91,7 +95,7 @@ public class Skeleton extends Thread{
         return "OK\n";
     }
 
-    private void terminarConexao() {
+    private void endConnection() {
         try {
             userSocket.close();
         } catch (IOException e) {

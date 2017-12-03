@@ -1,9 +1,10 @@
 package Server;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.Socket;
 
-public class User implements Comparable<User>{
+public class User implements Comparable<User>, Serializable{
     private String username;
     private String password;
     private int rank;

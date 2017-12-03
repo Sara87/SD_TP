@@ -1,11 +1,11 @@
 package Server;
 
-
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class OverBlind {
+public class OverBlind implements Serializable {
     private Map<String,User> users;
     private Map<String, String> heroes;
     private ReentrantLock userLock;
@@ -26,7 +26,6 @@ public class OverBlind {
      */
     public void register(String username, String pass) throws UserInvalidException{
         userLock.lock();
-
         try{
             if(this.users.containsKey(username))
                 throw new UserInvalidException("Username já existente");
@@ -75,5 +74,31 @@ public class OverBlind {
         }
         return u;
     }
+
+    /**
+     * Guardar o estado da aplicação num determinado ficheiro.
+     * @param fich
+     */
+    /*
+    public void saveObj(String fich) throws IOException {
+        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fich));
+        oos.writeObject(this);
+        oos.flush();
+        oos.close();
+    }*/
+
+
+    /**
+     * Iniciar a aplicação com o estado guardado num determinado ficheiro.
+     * @param fich
+     */
+    /*
+    public static OverBlind readObj(String fich) throws IOException, ClassNotFoundException {
+        ObjectInputStream os = new ObjectInputStream(new FileInputStream(fich));
+        OverBlind o = (OverBlind) os.readObject();
+        os.close();
+        return o;
+    }
+    */
 
 }

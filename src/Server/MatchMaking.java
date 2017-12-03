@@ -1,9 +1,10 @@
 package Server;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class MatchMaking extends Thread{
+public class MatchMaking extends Thread implements Serializable{
 
     private int rank;
     private Map<Integer,String> heroes;
