@@ -11,8 +11,17 @@ public class User implements Comparable<User>{
     private int losses;
     private Socket socket; //login?
 
-    public User(){}
+    public User(){
+        this.rank = 0;
+        this.wins = 0;
+        this.losses = 0;
+        this.socket = null;
+    }
 
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 
     public String getUsername() {
 
