@@ -3,7 +3,7 @@ package Servidor;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Game extends Thread {
+public class Game {
     private int gameId;
     private List<User> team1;
     private List<User> team2;
@@ -26,7 +26,4 @@ public class Game extends Thread {
         return winTeam;
     }
 
-    @Override
-    public void run() {
-    }
 }

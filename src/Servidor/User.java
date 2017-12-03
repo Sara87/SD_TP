@@ -30,14 +30,17 @@ public class User implements Comparable<User>{
     }
 
     public int getRank() {
+
         return rank;
     }
 
     public void setRank(int rank) {
+
         this.rank = rank;
     }
 
     public int getWins() {
+
         return wins;
     }
 
@@ -47,6 +50,7 @@ public class User implements Comparable<User>{
     }
 
     public int getLosses() {
+
         return losses;
     }
 
@@ -108,7 +112,9 @@ public class User implements Comparable<User>{
     public String toString(){
         StringBuilder sb = new StringBuilder();
         sb.append(username).append("\n");
-        sb.append("Rank: ").append(rank);
+        sb.append("Rank: ").append(rank).append("\n");
+        sb.append("Wins: ").append(wins).append("\n");
+        sb.append("Losses: ").append(losses);
 
         return sb.toString();
     }
