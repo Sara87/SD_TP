@@ -1,19 +1,17 @@
 package Servidor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class MatchMaking extends Thread{
 
     private int rank;
-    private Map<Integer,Heroe> heroes;
+    private Map<Integer,String> heroes;
     private List<User> team1;
     private List<User> team2;
     private ReentrantLock lock1;
     private ReentrantLock lock2;
+    private String winTeam;
 
 
     public MatchMaking() {
@@ -33,11 +31,11 @@ public class MatchMaking extends Thread{
         this.rank = rank;
     }
 
-    public Map<Integer, Heroe> getHeroes() {
-        return heroes;
+    public Map<Integer, String> getStrings() {
+        return this.heroes;
     }
 
-    public void setHeroes(Map<Integer, Heroe> heroes) {
+    public void setHeroes(Map<Integer, String> heroes) {
         this.heroes = heroes;
     }
 
@@ -71,6 +69,14 @@ public class MatchMaking extends Thread{
 
     public void setLock2(ReentrantLock lock2) {
         this.lock2 = lock2;
+    }
+
+    public void winTeam(){
+        Random r = new Random();
+        int result = r.nextInt(1);
+
+        if(result == 0) this.winTeam = "team1";
+        else this.winTeam = "team2";
     }
 
 
