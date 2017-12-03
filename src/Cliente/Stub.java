@@ -9,18 +9,17 @@ import java.util.NoSuchElementException;
 public class Stub extends Thread {
 
     private boolean client;
-    private Socket cliSocket;
-    private PrintWriter out;
     private Menu menu;
+    private Writer writer;
+    private Reader reader;
     private String[] initialMenu;
     private String[] sessionMenu;
 
-    public Stub(Socket cliSocket) throws IOException {
-        this.cliSocket = cliSocket;
-
-        out = new PrintWriter(cliSocket.getOutputStream(), true);
-        menu = new Menu(initialMenu);
-        setUpMenus();
+    public Stub(Writer w, Reader r) throws IOException {
+       this.writer = w;
+       this.reader = r;
+       menu = new Menu(initialMenu);
+       setUpMenus();
     }
 
 
@@ -65,15 +64,16 @@ public class Stub extends Thread {
 
     }
 
-    private String runCommand(int option) {
-        String response = "";
-        switch (option) {
+    private String runCommand(int op) {
+        String response ;
+        switch (op) {
             case 1:
                 register();
                 break;
             case 2:
                 login();
                 break;
+            /*
             case 3:
                 startGame();
                 break;
@@ -82,13 +82,17 @@ public class Stub extends Thread {
                 break;
             case 5:
                 rank();
-                break;
-        }
-        response = reader.ler(option);
-        if (option == 1) {
-            this.client = true;
+                break;*/
         }
 
+        try {
+            response = reader.read(op);
+            if (op == 1) {
+                this.client = true;
+            }
+        } catch (OrderFailedException e) {
+            response = e.getMessage();
+        }
         return response;
     }
 
@@ -99,17 +103,16 @@ public class Stub extends Thread {
         String password = menu.readString("Password: ");
         String query = String.join(" ", "LOGIN", username, password);
 
-        out.println(query);
+        writer.write(query);
+
     }
 
 
-    private String register() {
+    private void register() {
         String username = menu.readString("Username: ");
         String password = menu.readString("Password: ");
         String query = String.join(" ", "REGISTAR", username, password);
 
-        out.println(query);
-
-        return query;
+        writer.write(query);
     }
 }
