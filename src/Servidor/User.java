@@ -9,7 +9,7 @@ public class User implements Comparable<User>{
     private int rank;
     private int wins;
     private int losses;
-    private Socket socket;
+    private Socket socket; //login?
 
     public User(){}
 

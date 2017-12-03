@@ -9,7 +9,7 @@ public class Game extends Thread {
     private List<User> team2;
     private List<Heroe> heroes;
     private ReentrantLock heroeLock;
-    private String winTeam;
+    private String winTeam; //random entre team1 e team2
 
     public Game(int id, List<User> team1, List<User> team2) {
         this.gameId = id;
