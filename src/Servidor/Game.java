@@ -1,11 +1,14 @@
 package Servidor;
 
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Game extends Thread {
     private int gameId;
     private List<User> team1;
     private List<User> team2;
+    private List<Heroe> heroes;
+    private ReentrantLock heroeLock;
     private String winTeam;
 
     public Game(int id, List<User> team1, List<User> team2) {
