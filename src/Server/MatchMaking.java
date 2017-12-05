@@ -12,8 +12,6 @@ public class MatchMaking extends Thread implements Serializable{
     private List<User> team2;
     private ReentrantLock lock1;
     private ReentrantLock lock2;
-    private String winTeam;
-
 
     public MatchMaking() {
         this.rank = 0;
@@ -72,13 +70,21 @@ public class MatchMaking extends Thread implements Serializable{
         this.lock2 = lock2;
     }
 
-    public void winTeam(){
+    public void winTeam() {
         Random r = new Random();
         int result = r.nextInt(1);
 
-        if(result == 0) this.winTeam = "team1";
-        else this.winTeam = "team2";
+        if (result == 0) {
+            for (User u : team1)
+                u.setWins();
+            for (User u : team2)
+                u.setLosses();
+        } else {
+            for (User u : team1)
+                u.setLosses();
+
+            for (User u : team2)
+                u.setWins();
+        }
     }
-
-
 }

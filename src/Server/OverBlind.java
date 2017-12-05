@@ -1,21 +1,23 @@
 package Server;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class OverBlind implements Serializable {
     private Map<String,User> users;
-    private Map<String, String> heroes;
+    private List<String> heroes; // só para consulta, nunca vai ser alterada
+    private Map<Integer, MatchMaking> waiting; // <rank, mm>
+    private Map<Integer, MatchMaking> full;
     private ReentrantLock userLock;
-    private ReentrantLock gameLock;
 
     public OverBlind(){
         this.users = new HashMap<>();
-        this.heroes = new HashMap<>();
+        this.heroes = new ArrayList<>();
         this.userLock = new ReentrantLock();
-        this.gameLock = new ReentrantLock();
     }
 
     /**
@@ -74,31 +76,5 @@ public class OverBlind implements Serializable {
         }
         return u;
     }
-
-    /**
-     * Guardar o estado da aplicação num determinado ficheiro.
-     * @param fich
-     */
-    /*
-    public void saveObj(String fich) throws IOException {
-        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fich));
-        oos.writeObject(this);
-        oos.flush();
-        oos.close();
-    }*/
-
-
-    /**
-     * Iniciar a aplicação com o estado guardado num determinado ficheiro.
-     * @param fich
-     */
-    /*
-    public static OverBlind readObj(String fich) throws IOException, ClassNotFoundException {
-        ObjectInputStream os = new ObjectInputStream(new FileInputStream(fich));
-        OverBlind o = (OverBlind) os.readObject();
-        os.close();
-        return o;
-    }
-    */
 
 }
