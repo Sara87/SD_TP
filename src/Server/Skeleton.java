@@ -40,7 +40,6 @@ public class Skeleton extends Thread{
         }
     }
 
-
     private String interpreteRequest(String request){
         try {
             return translator(request);
