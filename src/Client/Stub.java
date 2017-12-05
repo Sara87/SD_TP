@@ -59,8 +59,8 @@ public class Stub extends Thread {
         sessionMenu[0] = "1) Começar nova partida";
         sessionMenu[1] = "2) Consultar heróis";
         sessionMenu[2] = "3) Consultar rank";
-
     }
+
 
     private String runCommand(int op) {
         String response ;

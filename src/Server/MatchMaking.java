@@ -7,7 +7,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class MatchMaking extends Thread implements Serializable{
 
     private int rank;
-    private Map<Integer,String> heroes;
+    private Map<String,String> heroes;
     private List<User> team1;
     private List<User> team2;
     private ReentrantLock lock1;
@@ -22,6 +22,13 @@ public class MatchMaking extends Thread implements Serializable{
         this.lock2 = new ReentrantLock();
     }
 
+    public MatchMaking(int rank, List<User> team1, List<User> team2) {
+        this.rank = rank;
+        this.team1 = team1;
+        this.team2 = team2;
+        this.heroes = new HashMap<>();
+    }
+
     public int getRank() {
         return rank;
     }
@@ -30,11 +37,11 @@ public class MatchMaking extends Thread implements Serializable{
         this.rank = rank;
     }
 
-    public Map<Integer, String> getStrings() {
+    public Map<String, String> getStrings() {
         return this.heroes;
     }
 
-    public void setHeroes(Map<Integer, String> heroes) {
+    public void setHeroes(Map<String, String> heroes) {
         this.heroes = heroes;
     }
 

@@ -10,8 +10,8 @@ import java.util.concurrent.locks.ReentrantLock;
 public class OverBlind implements Serializable {
     private Map<String,User> users;
     private List<String> heroes; // só para consulta, nunca vai ser alterada
-    private Map<Integer, MatchMaking> waiting; // <rank, mm>
-    private Map<Integer, MatchMaking> full;
+    private Map<Integer, List<String>> waiting; // <rank, listausers>
+    private List<MatchMaking> full;
     private ReentrantLock userLock;
 
     public OverBlind(){
@@ -77,4 +77,50 @@ public class OverBlind implements Serializable {
         return u;
     }
 
+    public void startWaiting (String username) {
+        int rank = users.get(username).getRank();
+
+        if (waiting.containsKey(rank)) {
+            waiting.get(rank).add(username);
+            if (waiting.get(rank).size() == 10) {
+                criarMatchMaking(rank, waiting.get(rank));
+                waiting.remove(rank,waiting.get(rank));
+            }
+        }
+
+        else if (waiting.containsKey(rank + 1)) {
+            waiting.get(rank + 1).add(username);
+            if (waiting.get(rank + 1).size() == 10) {
+                criarMatchMaking(rank + 1, waiting.get(rank + 1));
+                waiting.remove(rank + 1,waiting.get(rank + 1));
+            }
+        }
+
+        else if (waiting.containsKey(rank - 1)) {
+            waiting.get(rank - 1).add(username);
+            if (waiting.get(rank - 1).size() == 10) {
+                criarMatchMaking(rank - 1, waiting.get(rank - 1));
+                waiting.remove(rank - 1,waiting.get(rank - 1));
+            }
+        }
+
+        else {
+            List<String> aux = new ArrayList<>();
+            aux.add(username);
+            waiting.put(rank,aux);
+        }
+    }
+
+    private void criarMatchMaking(int rank, List<String> strings) {
+        List<User> team1 = new ArrayList<>();
+        List<User> team2 = new ArrayList<>();
+
+        strings.stream().limit(5).forEach(s -> { team1.add(users.get(s)) ; strings.remove(s);});
+        strings.stream().forEach(s ->  team2.add(users.get(s)));
+
+        MatchMaking m = new MatchMaking(rank,team1,team2);
+
+        full.add(m);
+
+        }
 }
