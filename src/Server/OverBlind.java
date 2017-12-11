@@ -10,7 +10,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class OverBlind implements Serializable {
     private Map<String,User> users;
     private List<String> heroes; // só para consulta, nunca vai ser alterada
-    private Map<Integer, List<String>> waiting; // <rank, listausers>
+    private Map<Integer, List<String>> waiting; // <rank, list<users>>
     private List<MatchMaking> full;
     private ReentrantLock userLock;
 
@@ -18,6 +18,26 @@ public class OverBlind implements Serializable {
         this.users = new HashMap<>();
         this.heroes = new ArrayList<>();
         this.userLock = new ReentrantLock();
+    }
+
+    public Map<String,User> getUsers() {
+        return users;
+    }
+
+    public List<String> getHeroes() {
+        return heroes;
+    }
+
+    public Map<Integer, List<String>> getWaiting() {
+        return waiting;
+    }
+
+    public List<MatchMaking> getFull() {
+        return full;
+    }
+
+    public ReentrantLock getUserLock() {
+        return userLock;
     }
 
     /**
@@ -83,7 +103,7 @@ public class OverBlind implements Serializable {
         if (waiting.containsKey(rank)) {
             waiting.get(rank).add(username);
             if (waiting.get(rank).size() == 10) {
-                criarMatchMaking(rank, waiting.get(rank));
+                newMatchMaking(rank, waiting.get(rank));
                 waiting.remove(rank,waiting.get(rank));
             }
         }
@@ -91,7 +111,7 @@ public class OverBlind implements Serializable {
         else if (waiting.containsKey(rank + 1)) {
             waiting.get(rank + 1).add(username);
             if (waiting.get(rank + 1).size() == 10) {
-                criarMatchMaking(rank + 1, waiting.get(rank + 1));
+                newMatchMaking(rank + 1, waiting.get(rank + 1));
                 waiting.remove(rank + 1,waiting.get(rank + 1));
             }
         }
@@ -99,7 +119,7 @@ public class OverBlind implements Serializable {
         else if (waiting.containsKey(rank - 1)) {
             waiting.get(rank - 1).add(username);
             if (waiting.get(rank - 1).size() == 10) {
-                criarMatchMaking(rank - 1, waiting.get(rank - 1));
+                newMatchMaking(rank - 1, waiting.get(rank - 1));
                 waiting.remove(rank - 1,waiting.get(rank - 1));
             }
         }
@@ -111,7 +131,7 @@ public class OverBlind implements Serializable {
         }
     }
 
-    private void criarMatchMaking(int rank, List<String> strings) {
+    private void newMatchMaking(int rank, List<String> strings) {
         List<User> team1 = new ArrayList<>();
         List<User> team2 = new ArrayList<>();
 

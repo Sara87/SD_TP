@@ -72,10 +72,10 @@ public class Stub extends Thread {
             case 2:
                 register();
                 break;
-            /*
             case 3:
-                startGame();
+                startWaiting();
                 break;
+                /*
             case 4:
                 listHeroes();
                 break;
@@ -114,4 +114,11 @@ public class Stub extends Thread {
 
         writer.write(query);
     }
+
+    private void startWaiting() {
+        String query = "WAITING";
+
+        writer.write(query);
+    }
+
 }

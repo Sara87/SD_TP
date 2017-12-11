@@ -1,6 +1,5 @@
 package Client;
 
-import Server.OverBlind;
 
 import java.io.IOException;
 import java.net.Socket;

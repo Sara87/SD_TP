@@ -57,6 +57,10 @@ public class Skeleton extends Thread{
             case "LOGIN":
                 checkLogin(false);
                 return login(parameters[1]);
+            case "WAITING":
+                checkLogin(true);
+                //return
+
             default:
                 throw new OrderFailedException(parameters[0] + " não é um comando válido");
         }
@@ -95,6 +99,11 @@ public class Skeleton extends Thread{
         return "OK\n";
     }
 
+    private String startWaiting(){
+        overblind.startWaiting(user.getUsername());
+        return "OK";
+    }
+
     private void endConnection() {
         try {
             userSocket.close();
@@ -102,4 +111,6 @@ public class Skeleton extends Thread{
             System.out.println("Não foi possível fechar o socket");
         }
     }
+
+
 }

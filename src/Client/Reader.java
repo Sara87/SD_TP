@@ -36,6 +36,9 @@ public class Reader {
                     case 2:
                         conteudo = in.readLine();
                         break;
+                    case 3:
+                        conteudo = in.readLine();
+                        break;
                 }
             }
         } catch (IOException e) {
