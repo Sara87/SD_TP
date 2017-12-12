@@ -37,7 +37,7 @@ public class Reader {
                         conteudo = in.readLine();
                         break;
                     case 3:
-                        conteudo = in.readLine();
+                        conteudo = readList();
                         break;
                 }
             }
@@ -46,5 +46,16 @@ public class Reader {
         }
         if (conteudo == null) return " ";
         return conteudo;
+    }
+
+    private String readList() throws IOException{
+        String l;
+        StringBuilder sb = new StringBuilder();
+
+        while((l = in.readLine()) != null){
+            sb.append(l);
+        }
+
+        return sb.toString();
     }
 }

@@ -5,19 +5,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class OverBlind implements Serializable {
     private Map<String,User> users;
     private List<String> heroes; // só para consulta, nunca vai ser alterada
     private Map<Integer, List<String>> waiting; // <rank, list<users>>
-    private List<MatchMaking> full;
+    private Map<Integer, MatchMaking> full;
     private ReentrantLock userLock;
+    private AtomicInteger idMatch;
 
     public OverBlind(){
         this.users = new HashMap<>();
         this.heroes = new ArrayList<>();
         this.userLock = new ReentrantLock();
+        this.idMatch = new AtomicInteger();
     }
 
     public Map<String,User> getUsers() {
@@ -32,7 +35,7 @@ public class OverBlind implements Serializable {
         return waiting;
     }
 
-    public List<MatchMaking> getFull() {
+    public Map<Integer, MatchMaking> getFull() {
         return full;
     }
 
@@ -97,12 +100,16 @@ public class OverBlind implements Serializable {
         return u;
     }
 
-    public void startWaiting (String username) {
+    public String startWaiting (String username) {
         int rank = users.get(username).getRank();
+        String heroes = " ";
 
         if (waiting.containsKey(rank)) {
             waiting.get(rank).add(username);
+            //TODO: DEPOIS DE ADICIONAR COMO FAZER PARA FICAREM A ESPERA ATE TER OS 10 ?
+            //TODO : COMO NOTIFICAR OS 10 ?
             if (waiting.get(rank).size() == 10) {
+                heroes = listHeroes();
                 newMatchMaking(rank, waiting.get(rank));
                 waiting.remove(rank,waiting.get(rank));
             }
@@ -111,6 +118,7 @@ public class OverBlind implements Serializable {
         else if (waiting.containsKey(rank + 1)) {
             waiting.get(rank + 1).add(username);
             if (waiting.get(rank + 1).size() == 10) {
+                heroes = listHeroes();
                 newMatchMaking(rank + 1, waiting.get(rank + 1));
                 waiting.remove(rank + 1,waiting.get(rank + 1));
             }
@@ -119,6 +127,7 @@ public class OverBlind implements Serializable {
         else if (waiting.containsKey(rank - 1)) {
             waiting.get(rank - 1).add(username);
             if (waiting.get(rank - 1).size() == 10) {
+                heroes = listHeroes();
                 newMatchMaking(rank - 1, waiting.get(rank - 1));
                 waiting.remove(rank - 1,waiting.get(rank - 1));
             }
@@ -129,6 +138,8 @@ public class OverBlind implements Serializable {
             aux.add(username);
             waiting.put(rank,aux);
         }
+
+        return heroes;
     }
 
     private void newMatchMaking(int rank, List<String> strings) {
@@ -140,7 +151,20 @@ public class OverBlind implements Serializable {
 
         MatchMaking m = new MatchMaking(rank,team1,team2);
 
-        full.add(m);
-
+        m.start();
+        full.put(idMatch.getAndIncrement(), m);
         }
+
+    private String listHeroes(){
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+
+        for(String h : heroes) {
+            sb.append(i + 1);
+            sb.append("-");
+            sb.append(h).append("\n");
+        }
+
+        return sb.toString();
+    }
 }

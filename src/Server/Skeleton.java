@@ -100,8 +100,8 @@ public class Skeleton extends Thread{
     }
 
     private String startWaiting(){
-        overblind.startWaiting(user.getUsername());
-        return "OK";
+        String h = overblind.startWaiting(user.getUsername());
+        return "OK" + h;
     }
 
     private void endConnection() {

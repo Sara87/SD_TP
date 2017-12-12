@@ -5,7 +5,7 @@ import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class MatchMaking extends Thread implements Serializable{
-
+    private int id;
     private int rank;
     private Map<String,String> heroes;
     private List<User> team1;
@@ -13,7 +13,8 @@ public class MatchMaking extends Thread implements Serializable{
     private ReentrantLock lock1;
     private ReentrantLock lock2;
 
-    public MatchMaking() {
+    public MatchMaking(int id){
+        this.id = id;
         this.rank = 0;
         this.heroes = new HashMap<>();
         this.team1 = new ArrayList<>();
@@ -61,20 +62,18 @@ public class MatchMaking extends Thread implements Serializable{
         this.team2 = team2;
     }
 
-    public ReentrantLock getLock1() {
-        return lock1;
-    }
+    @Override
+    public void run() {
 
-    public void setLock1(ReentrantLock lock1) {
-        this.lock1 = lock1;
-    }
+        try {
+            sleep(3000);
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-    public ReentrantLock getLock2() {
-        return lock2;
-    }
-
-    public void setLock2(ReentrantLock lock2) {
-        this.lock2 = lock2;
+        if(heroes.size() == 10)
+            winTeam();
     }
 
     public void winTeam() {

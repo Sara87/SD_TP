@@ -10,18 +10,24 @@ public class Menu {
     public Menu(String[] entries) {
         in = new Scanner(System.in);
         in.useDelimiter("[\r\n]");
+        options = entries;
     }
 
 
-    public int showMenu(String[] entries) {
+    public int showMenu() {
         int option = 0;
 
-        String menu = String.join("\n", entries);
-        System.out.println(menu + "\n");
+        System.out.println("------Menu-----");
 
-        while(option <= 0 || option > entries.length) {
+        for(int i = 0 ; i < options.length ; i++){
+            System.out.print(i+1);
+            System.out.print(" - ");
+            System.out.println(options[i]);
+        }
+
+        while(option <= 0 || option > options.length) {
             option = readInt("Escolha uma das opções: ");
-            if (option <= 0 || option > entries.length)
+            if (option <= 0 || option > options.length)
                 System.out.println("\n> Opção inválida\n");
         }
         return option;

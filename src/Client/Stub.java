@@ -7,16 +7,14 @@ import java.util.NoSuchElementException;
 public class Stub extends Thread {
 
     private boolean client;
-    private Menu menu;
     private Writer writer;
     private Reader reader;
-    private String[] initialMenu;
-    private String[] sessionMenu;
+    private Menu initialMenu, sessionMenu;
 
     public Stub(Writer w, Reader r) throws IOException {
        this.writer = w;
        this.reader = r;
-       menu = new Menu(initialMenu);
+
        setUpMenus();
     }
 
@@ -38,9 +36,9 @@ public class Stub extends Thread {
 
         try {
             if (!client)
-                option = menu.showMenu(initialMenu);
+                option = initialMenu.showMenu();
             else {
-                option = menu.showMenu(sessionMenu);
+                option = sessionMenu.showMenu()+22;
             }
         } catch (NoSuchElementException e) {
             return -1;
@@ -50,15 +48,19 @@ public class Stub extends Thread {
     }
 
     private void setUpMenus() {
-        initialMenu = new String[2];
-        sessionMenu = new String[3];
 
-        initialMenu[0] = "1) Iniciar Sessão";
-        initialMenu[1] = "2) Registar";
+        String [] initialMenu = { "Iniciar Sessão",
+                          "Registar"
+            };
 
-        sessionMenu[0] = "1) Começar nova partida";
-        sessionMenu[1] = "2) Consultar heróis";
-        sessionMenu[2] = "3) Consultar rank";
+        this.initialMenu = new Menu(initialMenu);
+
+        String [] sessionMenu = {"Começar nova partida",
+                "Consultar heróis",
+                "Consultar rank"
+        };
+
+        this.sessionMenu = new Menu(sessionMenu);
     }
 
 
@@ -98,8 +100,8 @@ public class Stub extends Thread {
 
 
     private void login() {
-        String username = menu.readString("Username: ");
-        String password = menu.readString("Password: ");
+        String username = initialMenu.readString("Username: ");
+        String password = initialMenu.readString("Password: ");
         String query = String.join(" ", "LOGIN", username, password);
 
         writer.write(query);
@@ -108,8 +110,8 @@ public class Stub extends Thread {
 
 
     private void register() {
-        String username = menu.readString("Username: ");
-        String password = menu.readString("Password: ");
+        String username = initialMenu.readString("Username: ");
+        String password = initialMenu.readString("Password: ");
         String query = String.join(" ", "REGISTAR", username, password);
 
         writer.write(query);
