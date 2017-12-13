@@ -76,7 +76,7 @@ public class MatchMaking extends Thread implements Serializable{
             winTeam();
     }
 
-    public void winTeam() {
+    public String winTeam() {
         Random r = new Random();
         int result = r.nextInt(1);
 
@@ -85,12 +85,17 @@ public class MatchMaking extends Thread implements Serializable{
                 u.setWins();
             for (User u : team2)
                 u.setLosses();
+
+            return "Team1";
+
         } else {
             for (User u : team1)
                 u.setLosses();
 
             for (User u : team2)
                 u.setWins();
+
+            return "Team2";
         }
     }
 }
