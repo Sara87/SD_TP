@@ -17,7 +17,7 @@ public class Menu {
     public int showMenu() {
         int option = 0;
 
-        System.out.println("------Menu-----");
+        System.out.println("---------------Menu---------------");
 
         for(int i = 0 ; i < options.length ; i++){
             System.out.print(i+1);

@@ -30,14 +30,15 @@ public class Skeleton extends Thread{
                     //TODO Tirar isto -> só para testar
                     System.out.println("Resposta servidor: " + reply);
                     output.println(reply);
+                    output.flush();
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             endConnection();
         }
     }
 
-    private String interpreter(String request){
+    private String interpreter(String request) throws InterruptedException{
         try {
             return translator(request);
         } catch (OrderFailedException e) {
@@ -47,7 +48,7 @@ public class Skeleton extends Thread{
         }
     }
 
-    private String translator(String request) throws ArrayIndexOutOfBoundsException, OrderFailedException {
+    private String translator(String request) throws ArrayIndexOutOfBoundsException, OrderFailedException, InterruptedException {
         String[] parameters = request.split(" ", 2);
 
         switch(parameters[0].toUpperCase()) {
@@ -59,7 +60,7 @@ public class Skeleton extends Thread{
                 return login(parameters[1]);
             case "WAITING":
                 checkLogin(true);
-                //return
+                return startWaiting();
 
             default:
                 throw new OrderFailedException(parameters[0] + " não é um comando válido");
@@ -99,7 +100,7 @@ public class Skeleton extends Thread{
         return "OK\n";
     }
 
-    private String startWaiting(){
+    private String startWaiting() throws InterruptedException{
         String h = overblind.startWaiting(user.getUsername());
         return "OK" + h;
     }
