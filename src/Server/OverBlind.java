@@ -139,7 +139,7 @@ public class OverBlind implements Serializable {
 
     private synchronized int whereToGo(String username) { // ver se fica isto ou dá-se lock
         int rank = this.users.get(username).getRank();
-        int rm = rank - 1, rM = rank + 1, go = -5;
+        int go = -5;
         List<String> rankm = this.waiting.get(rank - 1);
         List<String> rankM = this.waiting.get(rank + 1);
         List<String> rankL = this.waiting.get(rank);
@@ -161,7 +161,7 @@ public class OverBlind implements Serializable {
         } else return -1;
     }
 
-    //método que, para além de verificar se o rank existe na lista do seu anterior e seguinte, retorna 0 se existir em ambos senão retorna em qual existe
+    //método que, para além de verificar se o rank existe na lista do seu anterior e seguinte, retorna -2 se existir em ambos senão retorna em qual existe
     private int existsRank(List<String> playersm, List<String> playersM, int rank) {
         boolean b = false, b1 = false;
 

@@ -20,4 +20,6 @@ public class Writer {
         out.println(input);
         out.flush();
     }
+
+    //
 }
