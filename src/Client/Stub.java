@@ -65,7 +65,7 @@ public class Stub extends Thread {
 
 
     private void runCommand(int op) {
-        String response ;
+
         switch (op) {
             case 1:
                 login();
@@ -85,9 +85,6 @@ public class Stub extends Thread {
                 rank();
                 break;*/
         }
-
-
-        return;
     }
 
 
@@ -138,7 +135,10 @@ public class Stub extends Thread {
             String [] st = response.split("\n");
             heroes = new Menu(st);
             // ler a opção do heroi escolhida
+            int op = heroes.showMenu();
+            String opc = Integer.toString(op);
             // mandar ao servidor
+            writer.write(opc);
             // servidor reenvia lista ou devolve que heroi escolhido pode ou nao ser escolhido
             //ver a cena dos 30segundos
 

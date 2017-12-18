@@ -245,7 +245,7 @@ public class OverBlind implements Serializable {
                 "Yoda",
                 "Satan",
                 "Paces",
-                "Shark",
+                "X",
                 "Dolly",
                 "2-Pack",
                 "Puyol",
@@ -255,7 +255,7 @@ public class OverBlind implements Serializable {
                 "Piromaniac",
                 "MiniMilk",
                 "Camel",
-                "Terrorist",
+                "Koda",
                 "Marine",
                 "Choosen"
         };
