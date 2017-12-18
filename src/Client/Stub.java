@@ -9,7 +9,7 @@ public class Stub extends Thread {
     private boolean client;
     private Writer writer;
     private Reader reader;
-    private Menu initialMenu, sessionMenu;
+    private Menu initialMenu, sessionMenu, heroes;
 
     public Stub(Writer w, Reader r) throws IOException {
        this.writer = w;
@@ -38,7 +38,7 @@ public class Stub extends Thread {
             if (!client)
                 option = initialMenu.showMenu();
             else {
-                option = sessionMenu.showMenu()+22;
+                option = sessionMenu.showMenu()+2;
             }
         } catch (NoSuchElementException e) {
             return -1;
@@ -64,7 +64,7 @@ public class Stub extends Thread {
     }
 
 
-    private String runCommand(int op) {
+    private void runCommand(int op) {
         String response ;
         switch (op) {
             case 1:
@@ -86,15 +86,8 @@ public class Stub extends Thread {
                 break;*/
         }
 
-        try {
-            response = reader.read(op);
-            if (op == 1) {
-                this.client = true;
-            }
-        } catch (OrderFailedException e) {
-            response = e.getMessage();
-        }
-        return response;
+
+        return;
     }
 
 
@@ -106,6 +99,13 @@ public class Stub extends Thread {
 
         writer.write(query);
 
+        String response;
+        try {
+            response = reader.read(1);
+        } catch (OrderFailedException e) {
+            response = e.getMessage();
+        }
+        System.out.println(response);
     }
 
 
@@ -115,12 +115,37 @@ public class Stub extends Thread {
         String query = String.join(" ", "REGISTAR", username, password);
 
         writer.write(query);
+
+        String response;
+        try {
+            response = reader.read(2);
+        } catch (OrderFailedException e) {
+            response = e.getMessage();
+        }
+
+        System.out.println(response);
     }
 
     private void startWaiting() {
         String query = "WAITING";
 
         writer.write(query);
+
+        String response;
+
+        try {
+            response = reader.read(3);
+            String [] st = response.split("\n");
+            heroes = new Menu(st);
+            // ler a opção do heroi escolhida
+            // mandar ao servidor
+            // servidor reenvia lista ou devolve que heroi escolhido pode ou nao ser escolhido
+            //ver a cena dos 30segundos
+
+        } catch (OrderFailedException e) {
+            response = e.getMessage();
+            System.out.println(response);
+        }
     }
 
 }

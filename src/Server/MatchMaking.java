@@ -71,8 +71,8 @@ public class MatchMaking extends Thread implements Serializable{
         catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        if(heroes.size() == 10)
+        System.out.println("Tou aqui");
+        if(heroes.size() == 3)
             winTeam();
     }
 

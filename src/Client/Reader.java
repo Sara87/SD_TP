@@ -21,15 +21,16 @@ public class Reader {
 
     public String read(int comando) throws OrderFailedException {
         String cabecalho, conteudo = null;
+        System.out.println("Comando: " +comando);
         try {
             cabecalho = in.readLine();
             //TODO Isto tem que ser retirado
-            System.out.println(">> " + cabecalho + " <<");
+            //System.out.println(">> " + cabecalho + " <<");
             if (cabecalho.equals("EXCEPTION")) {
                 conteudo = in.readLine();
                 throw new OrderFailedException(conteudo);
             } else {
-                switch (comando - 2) {
+                switch (comando) {
                     case 1:
                         conteudo = in.readLine();
                         break;
@@ -52,10 +53,28 @@ public class Reader {
         String l;
         StringBuilder sb = new StringBuilder();
 
+       // System.out.println("Estou aqui!");
+
         while((l = in.readLine()) != null){
-            sb.append(l);
+            if (l.isEmpty())
+                break;
+            sb.append(l).append("\n");
         }
 
+      //  System.out.println("TESTE:"+ sb);
+
         return sb.toString();
+    }
+
+    private String readLine() {
+        String line = null;
+
+        try {
+            line = in.readLine();
+        } catch (IOException e) {
+            System.out.println("Não foi possível ler novas mensagens");
+        }
+
+        return line;
     }
 }

@@ -51,6 +51,8 @@ public class Skeleton extends Thread{
     private String translator(String request) throws ArrayIndexOutOfBoundsException, OrderFailedException, InterruptedException {
         String[] parameters = request.split(" ", 2);
 
+        System.out.println(parameters[0].toUpperCase());
+
         switch(parameters[0].toUpperCase()) {
             case "REGISTAR":
                 checkLogin(false);
@@ -59,6 +61,7 @@ public class Skeleton extends Thread{
                 checkLogin(false);
                 return login(parameters[1]);
             case "WAITING":
+                System.out.println("VAMOS pedir um wait");
                 checkLogin(true);
                 return startWaiting();
 
@@ -69,7 +72,7 @@ public class Skeleton extends Thread{
 
     private void checkLogin(boolean state) throws OrderFailedException {
         if (state == true && user == null)
-            throw new OrderFailedException("É necessário iniciar sessão para aceder aos ativos");
+            throw new OrderFailedException("É necessário iniciar sessão para poder jogar");
 
         if (state == false && user != null)
             throw new OrderFailedException("Já existe uma sessão iniciada");
@@ -93,16 +96,17 @@ public class Skeleton extends Thread{
         String[] parameters = arguments.split(" ");
 
         try {
-            overblind.login(parameters[0], parameters[1]);
+            user = overblind.login(parameters[0], parameters[1]);
         } catch (ArrayIndexOutOfBoundsException | UserInvalidException e) {
             throw new OrderFailedException(e.getMessage());
         }
+
         return "OK\n";
     }
 
     private String startWaiting() throws InterruptedException{
         String h = overblind.startWaiting(user.getUsername());
-        return "OK" + h;
+        return "OK\n" + h;
     }
 
     private void endConnection() {
