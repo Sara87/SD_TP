@@ -114,6 +114,7 @@ public class Stub extends Thread {
         writer.write(query);
 
         String response;
+        //todo meter o handler da excecao dentro do reader
         try {
             response = reader.read(2);
         } catch (OrderFailedException e) {
@@ -132,20 +133,30 @@ public class Stub extends Thread {
 
         try {
             response = reader.read(3);
-            String [] st = response.split("\n");
-            heroes = new Menu(st);
-            // ler a opção do heroi escolhida
-            int op = heroes.showMenu();
-            String opc = Integer.toString(op);
-            // mandar ao servidor
-            writer.write(opc);
-            // servidor reenvia lista ou devolve que heroi escolhido pode ou nao ser escolhido
-            //ver a cena dos 30segundos
+            choosingHeroe(response);
 
         } catch (OrderFailedException e) {
             response = e.getMessage();
             System.out.println(response);
         }
+    }
+
+    private void choosingHeroe(String response){
+        String query;
+        String [] st = response.split("\n");
+        heroes = new Menu(st);
+
+        // ler a opção do heroi escolhida
+        int op = heroes.showMenu();
+        String opc = Integer.toString(op);
+        query = String.join(" ","HEROI", opc);
+
+        // mandar ao servidor
+        writer.write(query);
+
+        // servidor reenvia lista ou devolve que heroi escolhido pode ou nao ser escolhido
+
+        //ver a cena dos 30segundos
     }
 
 }

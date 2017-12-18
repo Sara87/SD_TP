@@ -98,4 +98,38 @@ public class MatchMaking extends Thread implements Serializable{
             return "Team2";
         }
     }
+
+    public String checkHeroe(String user, String heroe, List<String> h){ //todo:
+        StringBuilder sb = new StringBuilder();
+
+        int t1 = team(user);
+
+
+        for(Map.Entry<String,String> s  : this.heroes.entrySet()){
+            for(String s1 : h){
+                if(s.getValue().equals(s1)) {
+                    String u = s.getKey();
+                    if (t1 == team(u))
+                        sb.append(s).append("-").append("*").append("\n");
+                    else sb.append(s).append("-").append("X").append("\n");
+                }
+                else sb.append(s);
+                    }
+                }
+        if(!this.heroes.containsValue(heroe)) {
+            this.heroes.put(user, heroe);
+            //return "Ganda Heroi";
+         }
+
+    return null;
+    }
+
+    private int team(String user){
+
+        if(this.team1.contains(user))
+            return 1;
+
+        return 2;
+    }
+
 }

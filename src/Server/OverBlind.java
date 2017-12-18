@@ -93,6 +93,8 @@ public class OverBlind implements Serializable {
     public synchronized String startWaiting(String username) throws InterruptedException {
         String heroes = " ";
         int r = this.users.get(username).getRank();
+        int idMM = -1;
+        StringBuilder sb = new StringBuilder();
 
         int rank = whereToGo(username);
         System.out.println("rank: " + rank);
@@ -106,7 +108,7 @@ public class OverBlind implements Serializable {
                     wait();
                 }
             } else {
-                newMatchMaking(rank, waiting.get(rank));
+                idMM = newMatchMaking(rank, waiting.get(rank));
                 notifyAll(); // ver isto muito melhor
                 waiting.remove(rank, waiting.get(rank));
             }
@@ -119,11 +121,12 @@ public class OverBlind implements Serializable {
         }
 
         heroes = listHeroes();
+        sb.append(idMM).append("\n").append(heroes);
 
-        return heroes;
+        return sb.toString();
     }
 
-    private void newMatchMaking(int rank, List<String> strings) {
+    private int newMatchMaking(int rank, List<String> strings) {
         List<User> team1 = new ArrayList<>();
         List<User> team2 = new ArrayList<>();
         int i = 1;//TODO: METER i = 5
@@ -141,7 +144,9 @@ public class OverBlind implements Serializable {
         MatchMaking m = new MatchMaking(rank, team1, team2);
         System.out.println("MatchMaking criado, rank : "+ rank);
         m.start();
-        full.put(idMatch.getAndIncrement(), m);
+        int id = idMatch.getAndIncrement();
+        full.put(id, m);
+        return id;
     }
 
     private String listHeroes() {
@@ -224,6 +229,14 @@ public class OverBlind implements Serializable {
         if (!b && b1) return rank + 1;
 
         return -3;
+    }
+
+    public String checkHeroe(String user, int id, int heroe){
+        MatchMaking m = this.full.get(id);
+        String h = heroes.get(heroe);
+        String str = m.checkHeroe(user, h, heroes);
+
+        return str;
     }
 
     private void heroesNames() {

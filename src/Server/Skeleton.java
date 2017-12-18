@@ -61,9 +61,12 @@ public class Skeleton extends Thread{
                 checkLogin(false);
                 return login(parameters[1]);
             case "WAITING":
-                System.out.println("VAMOS pedir um wait");
+                //System.out.println("VAMOS pedir um wait");
                 checkLogin(true);
                 return startWaiting();
+            case "HEROI":
+                checkLogin(true);
+                return checkHeroe(parameters[1]);
 
             default:
                 throw new OrderFailedException(parameters[0] + " não é um comando válido");
@@ -107,6 +110,15 @@ public class Skeleton extends Thread{
     private String startWaiting() throws InterruptedException{
         String h = overblind.startWaiting(user.getUsername());
         return "OK\n" + h;
+    }
+
+    private String checkHeroe(String str){
+        String[] parametros = str.split(" ");
+        int id = Integer.parseInt(parametros[0]);
+        int heroe = Integer.parseInt(parametros[1]);
+        String user = this.user.getUsername();
+        String h = overblind.checkHeroe(user, id, heroe);
+        return "OK\n";
     }
 
     private void endConnection() {
