@@ -61,7 +61,7 @@ public class Skeleton extends Thread{
                 checkLogin(false);
                 return login(parameters[1]);
             case "WAITING":
-                //System.out.println("VAMOS pedir um wait");
+                System.out.println("VAMOS pedir um wait");
                 checkLogin(true);
                 return startWaiting();
             case "HEROI":
@@ -117,6 +117,7 @@ public class Skeleton extends Thread{
         int id = Integer.parseInt(parametros[0]);
         int heroe = Integer.parseInt(parametros[1]);
         String user = this.user.getUsername();
+
         String h = overblind.checkHeroe(user, id, heroe);
         return "OK\n";
     }

@@ -99,6 +99,7 @@ public class Stub extends Thread {
         String response;
         try {
             response = reader.read(1);
+            client = true;
         } catch (OrderFailedException e) {
             response = e.getMessage();
         }
@@ -143,13 +144,14 @@ public class Stub extends Thread {
 
     private void choosingHeroe(String response){
         String query;
-        String [] st = response.split("\n");
-        heroes = new Menu(st);
+        String [] st = response.split("\n", 2);
+        String id = st[0];
+        heroes = new Menu(st[1].split("\n"));
 
         // ler a opção do heroi escolhida
         int op = heroes.showMenu();
         String opc = Integer.toString(op);
-        query = String.join(" ","HEROI", opc);
+        query = String.join(" ","HEROI", id, opc);
 
         // mandar ao servidor
         writer.write(query);

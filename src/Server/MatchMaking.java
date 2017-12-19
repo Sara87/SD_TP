@@ -99,11 +99,10 @@ public class MatchMaking extends Thread implements Serializable{
         }
     }
 
-    public String checkHeroe(String user, String heroe, List<String> h){ //todo:
+    public String checkHeroe(String user, String heroe, List<String> h){ //todo: verificar melhor este metodo, no sei se esta bem acabado
         StringBuilder sb = new StringBuilder();
 
         int t1 = team(user);
-
 
         for(Map.Entry<String,String> s  : this.heroes.entrySet()){
             for(String s1 : h){
@@ -118,10 +117,9 @@ public class MatchMaking extends Thread implements Serializable{
                 }
         if(!this.heroes.containsValue(heroe)) {
             this.heroes.put(user, heroe);
-            //return "Ganda Heroi";
          }
 
-    return null;
+    return sb.toString();
     }
 
     private int team(String user){

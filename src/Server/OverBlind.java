@@ -153,11 +153,8 @@ public class OverBlind implements Serializable {
         StringBuilder sb = new StringBuilder();
         int i = 0;
 
-        for (String h : heroes) {
-            sb.append(++i);
-            sb.append("-");
+        for (String h : heroes)
             sb.append(h).append("\n");
-        }
 
         return sb.toString();
     }
