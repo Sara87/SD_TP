@@ -72,7 +72,7 @@ public class MatchMaking extends Thread implements Serializable{
             e.printStackTrace();
         }
         System.out.println("Tou aqui");
-        if(heroes.size() == 3)
+        if(heroes.size() == 3) // todo: mudar isto p 5, so p nao ter que testar com 10
             winTeam();
     }
 
