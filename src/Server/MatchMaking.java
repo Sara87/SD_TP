@@ -13,53 +13,11 @@ public class MatchMaking extends Thread implements Serializable{
     private ReentrantLock lock1;
     private ReentrantLock lock2;
 
-    public MatchMaking(int id){
-        this.id = id;
-        this.rank = 0;
-        this.heroes = new HashMap<>();
-        this.team1 = new ArrayList<>();
-        this.team2 = new ArrayList<>();
-        this.lock1 = new ReentrantLock();
-        this.lock2 = new ReentrantLock();
-    }
-
     public MatchMaking(int rank, List<User> team1, List<User> team2) {
         this.rank = rank;
         this.team1 = team1;
         this.team2 = team2;
         this.heroes = new HashMap<>();
-    }
-
-    public int getRank() {
-        return rank;
-    }
-
-    public void setRank(int rank) {
-        this.rank = rank;
-    }
-
-    public Map<String, String> getStrings() {
-        return this.heroes;
-    }
-
-    public void setHeroes(Map<String, String> heroes) {
-        this.heroes = heroes;
-    }
-
-    public List<User> getTeam1() {
-        return team1;
-    }
-
-    public void setTeam1(List<User> team1) {
-        this.team1 = team1;
-    }
-
-    public List<User> getTeam2() {
-        return team2;
-    }
-
-    public void setTeam2(List<User> team2) {
-        this.team2 = team2;
     }
 
     @Override
@@ -97,7 +55,7 @@ public class MatchMaking extends Thread implements Serializable{
             return "Team2";
         }
     }
-
+// todo meter nome do gajo junto do heroi
     public String checkHeroe(String user, String heroe, List<String> h){ //todo: verificar melhor este metodo, no sei se esta bem acabado
         StringBuilder sb = new StringBuilder();
         StringBuilder sb2 = new StringBuilder();
@@ -124,11 +82,15 @@ public class MatchMaking extends Thread implements Serializable{
         return sb2.toString();
     }
 
+    /**
+     * Retorna se o utilizador é da equipa 1 ou da equipa 2
+     * @param user Username do utilizador
+     * @return int Número da equipa
+     */
     private int team(String user){
 
         if(this.team1.contains(user))
             return 1;
-
         return 2;
     }
 

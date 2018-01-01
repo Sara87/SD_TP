@@ -151,7 +151,6 @@ public class OverBlind implements Serializable {
 
     private String listHeroes() {
         StringBuilder sb = new StringBuilder();
-        int i = 0;
 
         for (String h : heroes)
             sb.append(h).append("\n");
