@@ -233,6 +233,8 @@ public class OverBlind implements Serializable {
         String h = heroes.get(heroe);
         String str = m.checkHeroe(user, h, heroes);
 
+        // esperar os 30 segundos
+
         return str;
     }
 

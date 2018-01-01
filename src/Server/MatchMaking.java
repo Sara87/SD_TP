@@ -87,7 +87,6 @@ public class MatchMaking extends Thread implements Serializable{
                 u.setLosses();
 
             return "Team1";
-
         } else {
             for (User u : team1)
                 u.setLosses();
@@ -101,6 +100,8 @@ public class MatchMaking extends Thread implements Serializable{
 
     public String checkHeroe(String user, String heroe, List<String> h){ //todo: verificar melhor este metodo, no sei se esta bem acabado
         StringBuilder sb = new StringBuilder();
+        StringBuilder sb2 = new StringBuilder();
+        sb2.append("Não pode escolher este herói. Tente outra vez.");
 
         int t1 = team(user);
 
@@ -109,17 +110,18 @@ public class MatchMaking extends Thread implements Serializable{
                 if(s.getValue().equals(s1)) {
                     String u = s.getKey();
                     if (t1 == team(u))
-                        sb.append(s).append("-").append("*").append("\n");
-                    else sb.append(s).append("-").append("X").append("\n");
+                        sb.append(s).append("-").append("*").append(u).append("\n");
                 }
                 else sb.append(s);
                     }
                 }
         if(!this.heroes.containsValue(heroe)) {
             this.heroes.put(user, heroe);
+            return sb.toString();
          }
 
-    return sb.toString();
+        sb2.append(sb.toString()).append("\n");
+        return sb2.toString();
     }
 
     private int team(String user){
