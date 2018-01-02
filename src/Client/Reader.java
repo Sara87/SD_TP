@@ -25,20 +25,23 @@ public class Reader {
         try {
             cabecalho = in.readLine();
             //TODO Isto tem que ser retirado
-            //System.out.println(">> " + cabecalho + " <<");
+            System.out.println(">> " + cabecalho + " <<");
             if (cabecalho.equals("EXCEPTION")) {
                 conteudo = in.readLine();
                 throw new OrderFailedException(conteudo);
             } else {
                 switch (comando) {
                     case 1:
-                        conteudo = in.readLine();
+                        conteudo = readLine();
                         break;
                     case 2:
-                        conteudo = in.readLine();
+                        conteudo = readLine();
                         break;
                     case 3:
                         conteudo = readList();
+                        break;
+                    default:
+                        readLine();
                         break;
                 }
             }

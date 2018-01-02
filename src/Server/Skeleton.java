@@ -28,7 +28,7 @@ public class Skeleton extends Thread{
                 String reply = interpreter(option);
                 if (!reply.isEmpty()) {
                     //TODO Tirar isto -> só para testar
-                    System.out.println("Resposta servidor: " + reply);
+                    System.out.println("O servidor respondeu");
                     output.println(reply);
                     output.flush();
                 }
@@ -61,7 +61,6 @@ public class Skeleton extends Thread{
                 checkLogin(false);
                 return login(parameters[1]);
             case "WAITING":
-                System.out.println("VAMOS pedir um wait");
                 checkLogin(true);
                 return startWaiting();
             case "HEROI":
@@ -118,8 +117,8 @@ public class Skeleton extends Thread{
         int heroe = Integer.parseInt(parametros[1]);
         String user = this.user.getUsername();
 
-        String h = overblind.checkHeroe(user, id, heroe);
-        return "OK\n";
+        String res = overblind.checkHeroe(user, id, heroe);
+        return "OK\n" + res;
     }
 
     private void endConnection() {

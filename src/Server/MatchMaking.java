@@ -2,6 +2,7 @@ package Server;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class MatchMaking extends Thread implements Serializable{
@@ -12,26 +13,33 @@ public class MatchMaking extends Thread implements Serializable{
     private List<User> team2;
     private ReentrantLock lock1;
     private ReentrantLock lock2;
+    private int game;
 
     public MatchMaking(int rank, List<User> team1, List<User> team2) {
         this.rank = rank;
         this.team1 = team1;
         this.team2 = team2;
         this.heroes = new HashMap<>();
+        this.game = 1;
+    }
+
+    public int getid() {
+        return id;
+    }
+
+    public void setId(int i) {
+        id = i;
     }
 
     @Override
     public void run() {
-
+        // esperar os 30 segundos
         try {
-            sleep(3000);
-        }
-        catch (InterruptedException e) {
+            sleep(30000);
+            checkGame();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("Tou aqui");
-        if(heroes.size() == 3) // todo: mudar isto p 5, so p nao ter que testar com 10
-            winTeam();
     }
 
     public String winTeam() {
@@ -55,28 +63,50 @@ public class MatchMaking extends Thread implements Serializable{
             return "Team2";
         }
     }
-// todo meter nome do gajo junto do heroi
+
+    public void checkGame(){
+
+        if(heroes.size() == 3) {
+            winTeam();
+            this.game = 0;
+        }
+    }
+
+
     public String checkHeroe(String user, String heroe, List<String> h){ //todo: verificar melhor este metodo, no sei se esta bem acabado
         StringBuilder sb = new StringBuilder();
         StringBuilder sb2 = new StringBuilder();
         sb2.append("Não pode escolher este herói. Tente outra vez.");
 
         int t1 = team(user);
+        if(!this.heroes.containsValue(heroe)) {
+            this.heroes.put(user, heroe);
 
-        for(Map.Entry<String,String> s  : this.heroes.entrySet()){
-            for(String s1 : h){
-                if(s.getValue().equals(s1)) {
+            for (String s1 : h) {
+                for (Map.Entry<String, String> s : this.heroes.entrySet()) {
+                    if (s.getValue().equals(s1)) {
+                        String u = s.getKey();
+                        if (t1 == team(u))
+                            sb.append(s).append("- *").append(u).append("\n");
+                    }
+                    else
+                        sb.append(s).append("\n");
+                }
+            }
+
+            sb.append("\n").append("Heroi escolhido").append("\n"); //todo: mudar
+            return sb.toString();
+        }
+
+        for (Map.Entry<String, String> s : this.heroes.entrySet()) {
+            for (String s1 : h) {
+                if (s.getValue().equals(s1)) {
                     String u = s.getKey();
                     if (t1 == team(u))
                         sb.append(s).append("-").append("*").append(u).append("\n");
-                }
-                else sb.append(s);
-                    }
-                }
-        if(!this.heroes.containsValue(heroe)) {
-            this.heroes.put(user, heroe);
-            return sb.toString();
-         }
+                } else sb.append(s);
+            }
+        }
 
         sb2.append(sb.toString()).append("\n");
         return sb2.toString();

@@ -4,7 +4,7 @@ package Client;
 import java.io.IOException;
 import java.util.NoSuchElementException;
 
-public class Stub extends Thread {
+public class Stub extends Waiter {
 
     private boolean client;
     private Writer writer;
@@ -134,8 +134,10 @@ public class Stub extends Thread {
 
         try {
             response = reader.read(3);
-            choosingHeroe(response);
-
+            Waiter t = new Waiter();
+            t.start();
+            while (!t.bool)
+                choosingHeroe(response);
         } catch (OrderFailedException e) {
             response = e.getMessage();
             System.out.println(response);
@@ -157,7 +159,11 @@ public class Stub extends Thread {
         writer.write(query);
 
         // servidor reenvia lista ou devolve que heroi escolhido pode ou nao ser escolhido
-
+        try {
+            reader.read(op + 2);
+        } catch (OrderFailedException e) {
+            e.printStackTrace();
+        }
         //ver a cena dos 30segundos
     }
 
