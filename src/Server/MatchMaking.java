@@ -11,8 +11,7 @@ public class MatchMaking extends Thread implements Serializable{
     private Map<String,String> heroes;
     private List<User> team1;
     private List<User> team2;
-    private ReentrantLock lock1;
-    private ReentrantLock lock2;
+    private ReentrantLock lock1 = new ReentrantLock();
     private int game;
 
     public MatchMaking(int rank, List<User> team1, List<User> team2) {
@@ -31,12 +30,19 @@ public class MatchMaking extends Thread implements Serializable{
         id = i;
     }
 
+    public int getGame() {
+        return game;
+    }
+
     @Override
     public void run() {
-        // esperar os 30 segundos
+        Thread w = new Thread();
         try {
-            sleep(30000);
-            checkGame();
+            w.join(30000);
+            if(heroes.size() == 3) {
+                winTeam();
+                this.game = 0; 
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -64,53 +70,60 @@ public class MatchMaking extends Thread implements Serializable{
         }
     }
 
-    public void checkGame(){
-
-        if(heroes.size() == 3) {
-            winTeam();
-            this.game = 0;
-        }
-    }
-
-
-    public String checkHeroe(String user, String heroe, List<String> h){ //todo: verificar melhor este metodo, no sei se esta bem acabado
+    public String checkHeroe(String user, String heroe, List<String> h) { //todo: verificar melhor este metodo, no sei se esta bem acabado
         StringBuilder sb = new StringBuilder();
-        StringBuilder sb2 = new StringBuilder();
-        sb2.append("Não pode escolher este herói. Tente outra vez.");
-
         int t1 = team(user);
-        if(!this.heroes.containsValue(heroe)) {
-            this.heroes.put(user, heroe);
 
+        lock1.lock();
+        try {
+            if (!this.heroes.containsValue(heroe)) {
+                this.heroes.put(user, heroe);
+                sb.append("Herói escolhido!\n");
+            }
+            else
+                sb.append("Herói não está disponível. Escolha de novo!\n");
+
+            for (Map.Entry<String, String> entry : this.heroes.entrySet()) {
+                if (team(entry.getKey()) == t1)
+                    sb.append(entry.getKey()).append(" -> ").append(entry.getValue()).append("\n");
+            }
+        }finally {
+            lock1.unlock();
+        }
+
+        /*if(!this.heroes.containsValue(heroe)) {
+
+            this.heroes.put(user, heroe);
             for (String s1 : h) {
                 for (Map.Entry<String, String> s : this.heroes.entrySet()) {
                     if (s.getValue().equals(s1)) {
                         String u = s.getKey();
                         if (t1 == team(u))
-                            sb.append(s).append("- *").append(u).append("\n");
+                            sb.append(s.getValue()).append("*- ").append(u).append("\n");
                     }
                     else
-                        sb.append(s).append("\n");
+                        sb.append(s.getValue()).append("\n");
+                }
+            }
+            sb.append("\n").append("Heroi escolhido").append("\n"); //todo: mudar
+
+        }
+        else {
+            for (Map.Entry<String, String> s : this.heroes.entrySet()) {
+                for (String s1 : h) {
+                    if (s.getValue().equals(s1)) {
+                        String u = s.getKey();
+                        if (t1 == team(u))
+                            sb.append(s).append("*- ").append(u).append("\n");
+                    } else sb.append(s);
                 }
             }
 
-            sb.append("\n").append("Heroi escolhido").append("\n"); //todo: mudar
+            sb.append("\n").append("Não pode escolher este herói. Tente outra vez.").append("\n");
+        }*/
             return sb.toString();
         }
 
-        for (Map.Entry<String, String> s : this.heroes.entrySet()) {
-            for (String s1 : h) {
-                if (s.getValue().equals(s1)) {
-                    String u = s.getKey();
-                    if (t1 == team(u))
-                        sb.append(s).append("-").append("*").append(u).append("\n");
-                } else sb.append(s);
-            }
-        }
-
-        sb2.append(sb.toString()).append("\n");
-        return sb2.toString();
-    }
 
     /**
      * Retorna se o utilizador é da equipa 1 ou da equipa 2
@@ -118,7 +131,6 @@ public class MatchMaking extends Thread implements Serializable{
      * @return int Número da equipa
      */
     private int team(String user){
-
         if(this.team1.contains(user))
             return 1;
         return 2;

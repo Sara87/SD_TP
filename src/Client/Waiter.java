@@ -5,10 +5,14 @@ public class Waiter extends Thread{
 
     public void run() {
         try {
-            sleep(30000);
+            sleep(3000);
             bool = true;
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean getBool () {
+        return bool;
     }
 }

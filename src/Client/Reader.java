@@ -21,7 +21,7 @@ public class Reader {
 
     public String read(int comando) throws OrderFailedException {
         String cabecalho, conteudo = null;
-        System.out.println("Comando: " +comando);
+        System.out.println("Comando reader: " + comando);
         try {
             cabecalho = in.readLine();
             //TODO Isto tem que ser retirado
@@ -40,8 +40,11 @@ public class Reader {
                     case 3:
                         conteudo = readList();
                         break;
+                    case 4:
+                        conteudo = readLine();
+                        break;
                     default:
-                        readLine();
+                        readList();
                         break;
                 }
             }
@@ -56,15 +59,11 @@ public class Reader {
         String l;
         StringBuilder sb = new StringBuilder();
 
-       // System.out.println("Estou aqui!");
-
         while((l = in.readLine()) != null){
             if (l.isEmpty())
                 break;
             sb.append(l).append("\n");
         }
-
-  //  System.out.println("TESTE:"+ sb);
 
         return sb.toString();
     }

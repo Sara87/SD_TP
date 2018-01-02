@@ -28,9 +28,9 @@ public class Skeleton extends Thread{
                 String reply = interpreter(option);
                 if (!reply.isEmpty()) {
                     //TODO Tirar isto -> só para testar
-                    System.out.println("O servidor respondeu");
+                    System.out.println(reply);
                     output.println(reply);
-                    output.flush();
+                    //output.flush();
                 }
             }
         } catch (IOException | InterruptedException e) {
@@ -65,8 +65,12 @@ public class Skeleton extends Thread{
                 return startWaiting();
             case "HEROI":
                 checkLogin(true);
+                System.out.println(parameters[1]);
                 return checkHeroe(parameters[1]);
-
+            case "VERIFY":
+                checkLogin(true);
+                System.out.println(parameters[1]);
+                return verify(parameters[1]);
             default:
                 throw new OrderFailedException(parameters[0] + " não é um comando válido");
         }
@@ -121,6 +125,13 @@ public class Skeleton extends Thread{
         return "OK\n" + res;
     }
 
+    private String verify(String str){
+        String[] parametros = str.split(" ");
+        int id = Integer.parseInt(parametros[0]);
+        String res = overblind.verify(id);
+        return "OK\n" + res;
+    }
+
     private void endConnection() {
         try {
             userSocket.close();
@@ -128,6 +139,8 @@ public class Skeleton extends Thread{
             System.out.println("Não foi possível fechar o socket");
         }
     }
+
+
 
 
 }

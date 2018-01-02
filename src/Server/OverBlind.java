@@ -2,21 +2,22 @@ package Server;
 
 import java.io.*;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+
 import java.util.concurrent.locks.ReentrantLock;
 
 public class OverBlind implements Serializable {
+
     private Map<String, User> users;
     private List<String> heroes; // só para consulta, nunca vai ser alterada
     private Map<Integer, List<String>> waiting; // <rank, list<users>>
     private Map<Integer, MatchMaking> full;
-    private ReentrantLock userLock;
+    private ReentrantLock userLock = new ReentrantLock();
+    private ReentrantLock fullLock = new ReentrantLock();
     boolean bool = true;
 
     public OverBlind() {
         this.users = new HashMap<>();
         this.heroes = new ArrayList<>();
-        this.userLock = new ReentrantLock();
         this.waiting = new HashMap<>();
         this.full = new HashMap<>();
         heroesNames();
@@ -92,15 +93,13 @@ public class OverBlind implements Serializable {
     public synchronized String startWaiting(String username) throws InterruptedException {
         String heroes;
         int r = this.users.get(username).getRank();
-        int idMM;
         StringBuilder sb = new StringBuilder();
 
         int rank = whereToGo(username);
-        System.out.println("rank: " + rank);
 
         if (rank != -1) {
             waiting.get(rank).add(username);
-            if (waiting.get(rank).size() < 3) {//distinguir ultimo dos outros todos
+            if (waiting.get(rank).size() < 3) {
                 System.out.println("Esperando");
                 wait();
             }
@@ -120,14 +119,14 @@ public class OverBlind implements Serializable {
             notifyAll(); // ver isto muito melhor
         }
 
+        System.out.println("Servidor rank: " + rank);
         heroes = listHeroes();
-        idMM = full.get(rank).getid();
         waiting.remove(rank, waiting.get(rank));
-        sb.append(idMM).append("\n").append(heroes);
-
+        sb.append(rank).append("\n").append(heroes).append("\n");
         return sb.toString();
     }
 
+    //TODO aqui não é 10?
     private int newMatchMaking(int rank, List<String> strings) {
         List<User> team1 = new ArrayList<>();
         List<User> team2 = new ArrayList<>();
@@ -144,12 +143,11 @@ public class OverBlind implements Serializable {
         strings.stream().forEach(s -> team2.add(users.get(s)));
 
         MatchMaking m = new MatchMaking(rank, team1, team2);
-        System.out.println("MatchMaking criado, rank : "+ rank);
         m.start();
         int id = rank;
         m.setId(id);
         full.put(id, m);
-        System.out.println("Match Inserido !!!!!");
+        System.out.println("MatchMaking criado, rank : "+ rank);
         return id;
     }
 
@@ -170,11 +168,9 @@ public class OverBlind implements Serializable {
         List<String> rankM = this.waiting.get(rank + 1);
         List<String> rankL = this.waiting.get(rank);
         boolean r = this.waiting.containsKey(rank);
-        //todo:System.out.println("existe rank dos gajos? " + r);
         if (r) {
 
             int aux = existsRank(rankm, rankM, rank);
-            //System.out.println("Aux : " + aux);
             if (aux == -2)
                 go = Math.max(rankL.size(), Math.max(rankm.size(), rankM.size()));
 
@@ -235,8 +231,20 @@ public class OverBlind implements Serializable {
         MatchMaking m = this.full.get(id);
         String h = heroes.get(heroe - 1);
         String str = m.checkHeroe(user, h, heroes);
-
         return str;
+    }
+
+    public String verify(int id) {
+        String res;
+        fullLock.lock();
+        MatchMaking m = this.full.get(id);
+        fullLock.unlock();
+        if (m.getGame() == 0)
+            res = "O jogo foi realizado com sucesso\n";
+        else
+            res = "Não foi possível a realização do jogo\n";
+
+        return res;
     }
 
     private void heroesNames() {
@@ -275,5 +283,6 @@ public class OverBlind implements Serializable {
 
         this.heroes = Arrays.asList(names);
     }
+
 }
 

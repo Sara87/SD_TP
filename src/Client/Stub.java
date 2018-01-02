@@ -3,13 +3,26 @@ package Client;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Stub extends Waiter {
-
+    private int mm;
     private boolean client;
+    private String str = "";
     private Writer writer;
     private Reader reader;
     private Menu initialMenu, sessionMenu, heroes;
+
+    TimerTask ttask = new TimerTask() {
+        public void run() {
+            if( str.equals("") )
+            {
+                System.out.println( "you input nothing. exit..." );
+            }
+            verify(mm);
+        }
+    };
 
     public Stub(Writer w, Reader r) throws IOException {
        this.writer = w;
@@ -37,9 +50,8 @@ public class Stub extends Waiter {
         try {
             if (!client)
                 option = initialMenu.showMenu();
-            else {
-                option = sessionMenu.showMenu()+2;
-            }
+            else
+                option = sessionMenu.showMenu() + 2;
         } catch (NoSuchElementException e) {
             return -1;
         }
@@ -65,28 +77,21 @@ public class Stub extends Waiter {
 
 
     private void runCommand(int op) {
-
-        switch (op) {
-            case 1:
-                login();
-                break;
-
-            case 2:
-                register();
-                break;
-            case 3:
-                startWaiting();
-                break;
-                /*
-            case 4:
-                listHeroes();
-                break;
-            case 5:
-                rank();
-                break;*/
-        }
+            switch (op) {
+                case 1:
+                    login();
+                    break;
+                case 2:
+                    register();
+                    break;
+                case 3:
+                    mm = startWaiting();
+                    Timer timer = new Timer();
+                    timer.schedule(ttask, 30*1000 );
+                    choosingHeroe(mm);
+                    break;
+            }
     }
-
 
 
     private void login() {
@@ -115,56 +120,56 @@ public class Stub extends Waiter {
         writer.write(query);
 
         String response;
-        //todo meter o handler da excecao dentro do reader
         try {
             response = reader.read(2);
         } catch (OrderFailedException e) {
             response = e.getMessage();
         }
-
         System.out.println(response);
     }
 
-    private void startWaiting() {
+    private int startWaiting() {
         String query = "WAITING";
-
-        writer.write(query);
-
+        String [] st = null , st2;
         String response;
-
+        writer.write(query);
         try {
             response = reader.read(3);
-            Waiter t = new Waiter();
-            t.start();
-            while (!t.bool)
-                choosingHeroe(response);
+            st = response.split("\n", 2);
+            st2 = st[1].split("\n");
+            this.heroes = new Menu(st2);
         } catch (OrderFailedException e) {
             response = e.getMessage();
             System.out.println(response);
         }
+        return Integer.parseInt(st[0]);
     }
 
-    private void choosingHeroe(String response){
+    private void choosingHeroe(int id) {
         String query;
-        String [] st = response.split("\n", 2);
-        String id = st[0];
-        heroes = new Menu(st[1].split("\n"));
-
-        // ler a opção do heroi escolhida
         int op = heroes.showMenu();
-        String opc = Integer.toString(op);
-        query = String.join(" ","HEROI", id, opc);
-
-        // mandar ao servidor
-        writer.write(query);
-
-        // servidor reenvia lista ou devolve que heroi escolhido pode ou nao ser escolhido
         try {
-            reader.read(op + 2);
+            query = String.join(" ", "HEROI", Integer.toString(id), Integer.toString(op));
+            writer.write(query);
+            reader.read(op + 4);
+            str = "Not Null";
         } catch (OrderFailedException e) {
             e.printStackTrace();
         }
-        //ver a cena dos 30segundos
+    }
+
+    public void verify (int id) {
+        String query;
+        query = String.join(" ","VERIFY", Integer.toString(id));
+        writer.write(query);
+        //TODO Ver como fazer aqui
+        try {
+            mm = -1;
+            reader.read(4);
+        } catch (OrderFailedException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }
