@@ -16,10 +16,8 @@ public class Stub extends Waiter {
 
     TimerTask ttask = new TimerTask() {
         public void run() {
-            if( str.equals("") )
-            {
-                System.out.println( "you input nothing. exit..." );
-            }
+            if(str.equals(""))
+                System.out.println( "\nyou input nothing. exit..." );
             verify(mm);
         }
     };
@@ -151,8 +149,8 @@ public class Stub extends Waiter {
         try {
             query = String.join(" ", "HEROI", Integer.toString(id), Integer.toString(op));
             writer.write(query);
-            reader.read(op + 4);
-            str = "Not Null";
+            str = reader.read(op + 4);
+            System.out.println(str);
         } catch (OrderFailedException e) {
             e.printStackTrace();
         }
@@ -165,7 +163,8 @@ public class Stub extends Waiter {
         //TODO Ver como fazer aqui
         try {
             mm = -1;
-            reader.read(4);
+            String res = reader.read(4);
+            System.out.println(res);
         } catch (OrderFailedException e) {
             e.printStackTrace();
         }

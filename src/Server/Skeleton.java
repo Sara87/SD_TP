@@ -30,7 +30,7 @@ public class Skeleton extends Thread{
                     //TODO Tirar isto -> só para testar
                     System.out.println(reply);
                     output.println(reply);
-                    //output.flush();
+                    output.flush();
                 }
             }
         } catch (IOException | InterruptedException e) {
@@ -51,7 +51,7 @@ public class Skeleton extends Thread{
     private String translator(String request) throws ArrayIndexOutOfBoundsException, OrderFailedException, InterruptedException {
         String[] parameters = request.split(" ", 2);
 
-        System.out.println(parameters[0].toUpperCase());
+        System.out.println("AÇÃO " + parameters[0].toUpperCase());
 
         switch(parameters[0].toUpperCase()) {
             case "REGISTAR":
@@ -106,7 +106,6 @@ public class Skeleton extends Thread{
         } catch (ArrayIndexOutOfBoundsException | UserInvalidException e) {
             throw new OrderFailedException(e.getMessage());
         }
-
         return "OK\n";
     }
 
@@ -122,14 +121,14 @@ public class Skeleton extends Thread{
         String user = this.user.getUsername();
 
         String res = overblind.checkHeroe(user, id, heroe);
-        return "OK\n" + res;
+        return "OK" + res + "\n§";
     }
 
     private String verify(String str){
         String[] parametros = str.split(" ");
         int id = Integer.parseInt(parametros[0]);
         String res = overblind.verify(id);
-        return "OK\n" + res;
+        return "OK\n" + res + "§";
     }
 
     private void endConnection() {

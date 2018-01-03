@@ -8,8 +8,8 @@ import java.util.concurrent.locks.ReentrantLock;
 public class OverBlind implements Serializable {
 
     private Map<String, User> users;
-    private List<String> heroes; // só para consulta, nunca vai ser alterada
-    private Map<Integer, List<String>> waiting; // <rank, list<users>>
+    private List<String> heroes;
+    private Map<Integer, List<String>> waiting;
     private Map<Integer, MatchMaking> full;
     private ReentrantLock userLock = new ReentrantLock();
     private ReentrantLock fullLock = new ReentrantLock();
@@ -58,7 +58,7 @@ public class OverBlind implements Serializable {
      * @param username Username do novo registo.
      * @param password Password do novo registo.
      */
-    public synchronized User login(String username, String password) throws UserInvalidException {
+    public User login(String username, String password) throws UserInvalidException {
         User u;
         try {
             u = checkUser(username, password);
@@ -126,7 +126,7 @@ public class OverBlind implements Serializable {
         return sb.toString();
     }
 
-    //TODO aqui não é 10?
+
     private int newMatchMaking(int rank, List<String> strings) {
         List<User> team1 = new ArrayList<>();
         List<User> team2 = new ArrayList<>();
@@ -153,21 +153,23 @@ public class OverBlind implements Serializable {
 
     private String listHeroes() {
         StringBuilder sb = new StringBuilder();
-
+        userLock.lock();
         for (String h : heroes)
             sb.append(h).append("\n");
-
+        userLock.unlock();
         return sb.toString();
     }
 
 
     private synchronized int whereToGo(String username) { // ver se fica isto ou dá-se lock
-        int rank = this.users.get(username).getRank();
         int go = -5;
+        userLock.lock();
+        int rank = this.users.get(username).getRank();
         List<String> rankm = this.waiting.get(rank - 1);
         List<String> rankM = this.waiting.get(rank + 1);
         List<String> rankL = this.waiting.get(rank);
         boolean r = this.waiting.containsKey(rank);
+        userLock.unlock();
         if (r) {
 
             int aux = existsRank(rankm, rankM, rank);
@@ -230,7 +232,7 @@ public class OverBlind implements Serializable {
     public String checkHeroe(String user, int id, int heroe){
         MatchMaking m = this.full.get(id);
         String h = heroes.get(heroe - 1);
-        String str = m.checkHeroe(user, h, heroes);
+        String str = m.checkHeroe(user, h);
         return str;
     }
 
