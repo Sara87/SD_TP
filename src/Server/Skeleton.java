@@ -121,14 +121,14 @@ public class Skeleton extends Thread{
         String user = this.user.getUsername();
 
         String res = overblind.checkHeroe(user, id, heroe);
-        return "OK" + res + "\n§";
+        return "OK\n" + res;
     }
 
     private String verify(String str){
         String[] parametros = str.split(" ");
         int id = Integer.parseInt(parametros[0]);
         String res = overblind.verify(id);
-        return "OK\n" + res + "§";
+        return "OK\n" + res;
     }
 
     private void endConnection() {

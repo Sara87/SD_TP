@@ -17,7 +17,7 @@ public class Stub extends Waiter {
     TimerTask ttask = new TimerTask() {
         public void run() {
             if(str.equals(""))
-                System.out.println( "\nyou input nothing. exit..." );
+                System.out.println( "\nyou input nothing. exit...");
             verify(mm);
         }
     };
@@ -43,7 +43,7 @@ public class Stub extends Waiter {
 
 
     private int showMenu() {
-        int option = 0;
+        int option;
 
         try {
             if (!client)

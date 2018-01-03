@@ -83,15 +83,16 @@ public class MatchMaking extends Thread implements Serializable{
         try {
             if (!this.heroes.containsValue(heroe)) {
                 this.heroes.put(user, heroe);
-                sb.append("\nHerói escolhido!");
+                sb.append("Herói escolhido!");
             }
             else
-                sb.append("\nHerói não está disponível. Escolha de novo!");
+                sb.append("Herói não está disponível. Escolha de novo!");
 
             for (Map.Entry<String, String> entry : this.heroes.entrySet()) {
                 if (team(entry.getKey()) == t1)
                     sb.append("\n").append(entry.getKey()).append(" -> ").append(entry.getValue());
             }
+            sb.append("\n§");
         }finally {
             heroeLock.unlock();
         }

@@ -25,7 +25,6 @@ public class Reader {
         try {
             cabecalho = in.readLine();
             //TODO Isto tem que ser retirado
-            if(cabecalho == null) cabecalho = in.readLine();
             System.out.println(">> " + cabecalho + " <<");
             if (cabecalho.equals("EXCEPTION")) {
                 conteudo = in.readLine();
@@ -52,16 +51,16 @@ public class Reader {
         } catch (IOException e) {
             e.getMessage();
         }
-        if (conteudo == null) return " ";
+        if (conteudo == null) return "Conteúdo vazio";
         return conteudo;
     }
 
-    private String readList() throws IOException{
+    private String readList() {
         String l;
         StringBuilder sb = new StringBuilder();
 
-        while((l = readLine()) != null || !l.equals("§")){
-            if (l.isEmpty())
+        while((l = readLine()) != null){
+            if (l.isEmpty() || l.equals("§"))
                 break;
             sb.append(l).append("\n");
         }

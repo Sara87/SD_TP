@@ -122,7 +122,8 @@ public class OverBlind implements Serializable {
         System.out.println("Servidor rank: " + rank);
         heroes = listHeroes();
         waiting.remove(rank, waiting.get(rank));
-        sb.append(rank).append("\n").append(heroes).append("\n");
+        //TODO §
+        sb.append(rank).append("\n").append(heroes).append("\n§");
         return sb.toString();
     }
 
@@ -132,13 +133,19 @@ public class OverBlind implements Serializable {
         List<User> team2 = new ArrayList<>();
         int i = 1;//TODO: METER i = 5
 
-        for(String s : strings) { //TODO: METER limit(5) e no i também, so p teste
-            team1.add(users.get(s));
-            strings.remove(s);
-            i--;
-            if(i == 0)
-                break;
+        userLock.lock();
+        try {
+            for (String s : strings) { //TODO: METER limit(5) e no i também, so p teste
+                team1.add(users.get(s));
+                strings.remove(s);
+                i--;
+                if (i == 0)
+                    break;
+            }
         }
+        finally{
+            userLock.unlock();
+            }
 
         strings.stream().forEach(s -> team2.add(users.get(s)));
 
@@ -146,7 +153,11 @@ public class OverBlind implements Serializable {
         m.start();
         int id = rank;
         m.setId(id);
+
+        userLock.lock(); //todo: ver se isto presta
         full.put(id, m);
+        userLock.unlock();
+
         System.out.println("MatchMaking criado, rank : "+ rank);
         return id;
     }
@@ -163,13 +174,13 @@ public class OverBlind implements Serializable {
 
     private synchronized int whereToGo(String username) { // ver se fica isto ou dá-se lock
         int go = -5;
-        userLock.lock();
+
         int rank = this.users.get(username).getRank();
         List<String> rankm = this.waiting.get(rank - 1);
         List<String> rankM = this.waiting.get(rank + 1);
         List<String> rankL = this.waiting.get(rank);
         boolean r = this.waiting.containsKey(rank);
-        userLock.unlock();
+
         if (r) {
 
             int aux = existsRank(rankm, rankM, rank);
@@ -192,32 +203,47 @@ public class OverBlind implements Serializable {
     //método que, para além de verificar se o rank existe na lista do seu anterior e seguinte, retorna -2 se existir em ambos senão retorna em qual existe
     private int existsRank(List<String> playersm, List<String> playersM, int rank) {
         boolean b = false, b1 = false;
-
+        //TODO: verificar isto
         if (rank != 0) {
             if (playersm != null) {
-                for (String p : playersm) {
-                    if (this.users.get(p).getRank() == rank) {
-                        b = true;
-                        break;
+                userLock.lock();
+                try {
+                    for (String p : playersm) {
+                        if (this.users.get(p).getRank() == rank) {
+                            b = true;
+                            break;
+                        }
                     }
+                } finally {
+                    userLock.unlock();
                 }
             }
 
             if (playersM != null) {
-                for (String p1 : playersM) {
-                    if (this.users.get(p1).getRank() == rank) {
-                        b1 = true;
-                        break;
+
+                try {
+                    for (String p1 : playersM) {
+                        if (this.users.get(p1).getRank() == rank) {
+                            b1 = true;
+                            break;
+                        }
                     }
+                } finally {
+                    userLock.unlock();
                 }
             }
+
         } else {
-            if(playersM != null) {
-                for (String p1 : playersM) {
-                    if (this.users.get(p1).getRank() == rank) {
-                        b1 = true;
-                        break;
+            if (playersM != null) {
+                try {
+                    for (String p1 : playersM) {
+                        if (this.users.get(p1).getRank() == rank) {
+                            b1 = true;
+                            break;
+                        }
                     }
+                } finally {
+                    userLock.unlock();
                 }
             }
         }
